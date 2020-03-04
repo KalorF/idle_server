@@ -11,7 +11,7 @@ router.post('/signup', async (ctx) => {
       ctx.body = {
         code: 205,
         msg: '用户已被注册',
-        id: findPhone[0]
+        data: findPhone[0]
       }
       return
     }
