@@ -23,13 +23,12 @@ const GoodsSchema = new Schema({
     default: ''
   },
   seller: {
-    type: mongoose.Schema.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User'
   },
   buyer: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'User',
-    default: null
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   },
   createTime: {
     type: String,

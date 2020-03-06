@@ -6,6 +6,7 @@ const dbConfig = require('./dbs/config')
 const user = require('./interface/user')
 const type = require('./interface/type')
 const goods = require('./interface/goods')
+const order = require('./interface/order')
 
 const app = new Koa()
 
@@ -19,6 +20,7 @@ mongoose.connect(dbConfig.dbs, {useNewUrlParser:true, useUnifiedTopology: true})
 app.use(user.routes()).use(user.allowedMethods())
 app.use(type.routes()).use(type.allowedMethods())
 app.use(goods.routes()).use(goods.allowedMethods())
+app.use(order.routes()).use(order.allowedMethods())
 
 app.listen(3000, () => {
   console.log('server listening in http://localhost:3000')
