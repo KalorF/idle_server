@@ -17,6 +17,10 @@ const OrderSchema = new Schema({
   createTime: {
     type: String,
     default: new Date().getTime()
+  },
+  finishTime: {
+    type: String,
+    default: ''
   }
 })
 

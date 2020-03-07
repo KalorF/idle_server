@@ -1,7 +1,6 @@
 const Router = require('koa-router')
 const Goods = require('../dbs/models/goods')
 const Order = require('../dbs/models/order')
-const User = require('../dbs/models/user')
 
 const router = new Router({prefix: '/goods'})
 
@@ -77,8 +76,8 @@ router.get('/getSearchList', async (ctx) => {
 
 // 查看发布商品出售情况
 router.get('/getMyOrder', async (ctx) => {
-  const { seller } = ctx.query
-  let myGoods = JSON.parse(JSON.stringify(await Goods.find({seller}, {__v: 0})))
+  const { seller, status } = ctx.query
+  let myGoods = JSON.parse(JSON.stringify(status == 1 ? await Goods.find({seller, buyer: {"$ne":undefined, $exists: true }}, {__v: 0}) : await Goods.find({seller, buyer: undefined}, { __v: 0})))
   for (let i = 0; i < myGoods.length; i++) {
     let buyers = await Order.find({goods: myGoods[i]._id}, {__v:0}).populate('buyer',{password: 0, createTime: 0, __v: 0, spareMoney: 0})
     myGoods[i].buyers = buyers
@@ -93,7 +92,7 @@ router.get('/getMyOrder', async (ctx) => {
 // 确认卖给某人
 router.post('/sellToSb', async (ctx) => {
   const { buyer, goodsId } = ctx.request.body
-  await Goods.updateOne({_id: goodsId}, {$set: {buyer}})
+  await Goods.updateOne({_id: goodsId}, {$set: {buyer, finishTime: new Date().getTime()}})
   await Order.updateOne({goods: goodsId, buyer}, {$set: {isReceive: 1}})
   await Order.updateMany({goods: goodsId, buyer: {$ne:buyer}}, {$set: {isReceive: -1}})
   ctx.body = {

@@ -38,4 +38,14 @@ router.post('/myOrder', async (ctx) => {
   }
 })
 
+// 确认收货接口
+router.post('/confirmGoods', async (ctx) => {
+  const { OrderId } = ctx.request.body
+  await Order.updateOne({ _id: OrderId }, {$set: {isReceive: 2, finishTime: new Date().getTime()}})
+  ctx.body = {
+    code: 200,
+    msg: '确认收货成功'
+  }
+})
+
 module.exports = router
