@@ -1,22 +1,22 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const CommentSchema = new Schema({
-  content: {
-    type: String,
-    default: ''
-  },
-  dynamic: {
+const ReplySchema = new Schema({
+  comment: {
     type: Schema.Types.ObjectId,
-    ref: 'Dynamic'
+    ref: 'Comment'
   },
-  reviewer: {
+  replyer: {
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
-  linkeNum: {
-    type: Number,
-    default: 0
+  replyToSb: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  content: {
+    type: String,
+    default: ''
   },
   createTime: {
     type: String,
@@ -24,4 +24,5 @@ const CommentSchema = new Schema({
   }
 })
 
-module.exports = mongoose.model('Comment', CommentSchema)
+
+module.exports = mongoose.model('Reply', ReplySchema)

@@ -9,6 +9,7 @@ const goods = require('./interface/goods')
 const order = require('./interface/order')
 const dynamic = require('./interface/dynamic')
 const comment = require('./interface/comment')
+const reply = require('./interface/reply')
 
 const app = new Koa()
 
@@ -25,6 +26,7 @@ app.use(goods.routes()).use(goods.allowedMethods())
 app.use(order.routes()).use(order.allowedMethods())
 app.use(dynamic.routes()).use(dynamic.allowedMethods())
 app.use(comment.routes()).use(comment.allowedMethods())
+app.use(reply.routes()).use(reply.allowedMethods())
 
 app.listen(3000, () => {
   console.log('server listening in http://localhost:3000')

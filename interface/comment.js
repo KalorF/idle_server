@@ -5,8 +5,8 @@ const router = new Router({ prefix: '/comment' })
 
 // 添加品论
 router.post('/addComment', async (ctx) => {
-  const { content, comment, reviewer } = ctx.request.body
-  await Comment.create({ content, comment, reviewer })
+  const { content, dynamic, reviewer } = ctx.request.body
+  await Comment.create({ content, dynamic, reviewer })
   ctx.body = {
     code: 200,
     msg: '评论成功'

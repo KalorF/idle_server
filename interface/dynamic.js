@@ -29,7 +29,7 @@ router.get('/getPublish', async (ctx) => {
 router.get('/viewDymCom', async (ctx) => {
   const { dynamicId } = ctx.query
   let dynamic = JSON.parse(JSON.stringify(await Dynamic.findOne({ _id: dynamicId }, {__v: 0})))
-  const comments = await Comment.find({ comment: dynamicId }).sort({'_id': -1}).populate('reviewer', {password: 0, createTime: 0, __v: 0, spareMoney: 0})
+  const comments = await Comment.find({ dynamic: dynamicId }).sort({'_id': -1}).populate('reviewer', {password: 0, createTime: 0, __v: 0, spareMoney: 0})
   dynamic.comments = comments
   ctx.body = {
     code: 200,
