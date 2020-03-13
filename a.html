@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+    <input type="file" id="uploadFile" name="smfile" enctype="multipart/form-data"/>
+    <div id="res"></div>
+    <img src="https://idlepics.oss-cn-shenzhen.aliyuncs.com/pic/d61b-fyqzcxh5905062.jpg" alt="">
+<script>
+   //上传图片  返回一个网络图片路径url
+    $('#uploadFile').change(function(){
+        var f=this.files[0];
+        var formData=new FormData();
+        formData.append('smfile',f);    //强调一下这个对象的name一定是smfile，不能变
+        $.ajax({
+            url: 'https://sm.ms/api/v2/upload',
+            type: 'POST',
+            success: function(data){
+                console.log(data);
+                $('#res').html(JSON.stringify(data.data.url));//即图片的网络url//获取后可以使用
+            },
+            error: function(data){
+                console.log(data);
+            },
+            data:formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+
+</script>
+</body>
+</html>

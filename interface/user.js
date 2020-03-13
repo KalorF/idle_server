@@ -1,6 +1,14 @@
 const Router = require('koa-router')
 const User = require('../dbs/models/user')
+const fs = require('fs')
+let OSS = require('ali-oss')
 
+let client = new OSS({
+  region: 'oss-cn-shenzhen',
+  accessKeyId: 'LTAI4FsFdocr9jTT3oVBBzZW',
+  accessKeySecret: 'NSQpM5SVNpNxGazxBW4fu2U0uMH3z5',
+  bucket: 'idlepics',
+});
 const router = new Router({prefix: '/user'})
 
 router.post('/signup', async (ctx) => {
@@ -30,6 +38,38 @@ router.post('/signup', async (ctx) => {
       ...ctx.request.body
     }
     return
+  }
+})
+
+router.post('/login', async (ctx) => {
+  const { phone, password } = ctx.request.body
+  const findUser = await User.findOne({phone}, {__v: 0, createTime: 0})
+  if (!findUser) {
+    ctx.body = {
+      code: 205,
+      msg: '用户不存在'
+    }
+    return
+  }
+  if (findUser && password === findUser.password) {
+    ctx.body = {
+      code: 200,
+      msg: '登陆成功',
+      data: findUser
+    }
+    return
+  }
+  return ctx.body = {code: 206, msg: '密码错误'}
+})
+
+router.post('/uploadPics', async (ctx) => {
+  const file = ctx.request.files.file
+  const reader = fs.createReadStream(file.path)
+  const name = new Date().getTime() + file.name
+  let result = await client.put(`idle/${name}`, reader)
+  ctx.body = {
+    code: 200,
+    data: result
   }
 })
 

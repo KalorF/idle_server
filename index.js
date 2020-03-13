@@ -1,6 +1,7 @@
 const Koa = require('koa')
 const mongoose = require('mongoose')
-const bodyParser = require('koa-bodyparser')
+// const bodyParser = require('koa-bodyparser')
+const koaBody = require('koa-body');
 const json = require('koa-json')
 const dbConfig = require('./dbs/config')
 const user = require('./interface/user')
@@ -13,8 +14,14 @@ const reply = require('./interface/reply')
 
 const app = new Koa()
 
-app.use(bodyParser({
-  extendTypes:['json', 'form', 'text']
+// app.use(bodyParser({
+//   extendTypes:['json', 'form', 'text']
+// }))
+app.use(koaBody({
+  multipart: true,
+  formidable: {
+    maxFileSize: 700 * 1024 * 1024    // 设置上传文件大小最大限制，默认2M
+  }
 }))
 app.use(json())
 

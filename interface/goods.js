@@ -16,10 +16,21 @@ router.post('/publishGoods', async (ctx) => {
   }
 })
 
+// 根据id获取商品详情
+router.get('/goodsDetail', async (ctx) => {
+  const { id } = ctx.query
+  const data = await Goods.findOne({_id: id}, {__v: 0}).populate('seller', {password: 0, createTime: 0, __v: 0, spareMoney: 0})
+  ctx.body = {
+    code: 200,
+    msg: '获取成功',
+    data
+  }
+})
+
 // 首页获取商品列表
 router.get('/goodsList', async (ctx) => {
   const city = ctx.query.city
-  const data = await Goods.find({city, buyer: undefined}, {__v: 0}).populate('seller', {password: 0, createTime: 0, __v: 0, spareMoney: 0})
+  const data = await Goods.find({city, buyer: undefined}, {__v: 0}).populate('seller', {password: 0, createTime: 0, __v: 0, spareMoney: 0}).sort({'_id': -1})
   data.length ? ctx.body = {
     code: 200,
     msg: '获取成功',
@@ -75,9 +86,12 @@ router.get('/getSearchList', async (ctx) => {
 })
 
 // 查看发布商品出售情况
-router.get('/getMyOrder', async (ctx) => {
+router.get('/viewMygoods', async (ctx) => {
   const { seller, status } = ctx.query
-  let myGoods = JSON.parse(JSON.stringify(status == 1 ? await Goods.find({seller, buyer: {"$ne":undefined, $exists: true }}, {__v: 0}) : await Goods.find({seller, buyer: undefined}, { __v: 0})))
+  let myGoods = JSON.parse(JSON.stringify(
+    status == 1 ? await Goods.find({seller, buyer: {"$ne":undefined, $exists: true }}, {__v: 0}).populate('buyer', {password: 0, createTime: 0, __v: 0, spareMoney: 0}).sort({'_id': -1})
+    : await Goods.find({seller, buyer: undefined}, { __v: 0}).sort({'_id': -1})
+  ))
   for (let i = 0; i < myGoods.length; i++) {
     let buyers = await Order.find({goods: myGoods[i]._id}, {__v:0}).populate('buyer',{password: 0, createTime: 0, __v: 0, spareMoney: 0})
     myGoods[i].buyers = buyers
