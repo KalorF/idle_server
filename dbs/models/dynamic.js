@@ -18,6 +18,10 @@ const DynamicSchme = new Schema({
     type: String,
     default: ''
   },
+  likeNum: {
+    type: Number,
+    default: 0
+  },
   creteTime: {
     type: String,
     default: new Date().getTime()
