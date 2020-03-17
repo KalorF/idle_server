@@ -62,6 +62,50 @@ router.post('/login', async (ctx) => {
   return ctx.body = {code: 206, msg: '密码错误'}
 })
 
+// 获取用户信息接口
+router.post('/getUserInfo', async (ctx) => {
+  const { userId } = ctx.request.body
+  const user = await User.findOne({ _id: userId })
+  ctx.body = {
+    code: 200,
+    data: user
+  }
+})
+
+// 修改用户信息接口
+router.post('/modifyUserInfo', async (ctx) => {
+  const { userId, username, wechat, avatars } = ctx.request.body
+  if (wechat) {
+    await User.updateOne({ _id: userId }, {$set:{ username }})
+  } else if (wechat) {
+    await User.updateOne({ _id: userId }, {$set:{ wechat }})
+  } else {
+    await User.updateOne({ _id: userId }, {$set:{ avatars }})
+  }
+  ctx.body = {
+    code: 200,
+    msg: '修改成功'
+  }
+})
+
+router.post('/modifyPwd', async (ctx) => {
+  const { userId, originPwd, newPwd } = ctx.request.body
+  const user = await User.findOne({ _id: userId, password: originPwd})
+  if (!user) {
+    ctx.body = {
+      code: 204,
+      msg: '原密码错误'
+    }
+    return
+  }
+  await User.updateOne({ _id: userId }, {$set: {password: newPwd}})
+  ctx.body = {
+    code: 200,
+    msg: '修改成功'
+  }
+})
+
+// 用户上传图片接口
 router.post('/uploadPics', async (ctx) => {
   const file = ctx.request.files.file
   const reader = fs.createReadStream(file.path)

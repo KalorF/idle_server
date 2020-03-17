@@ -21,6 +21,10 @@ const ReplySchema = new Schema({
   createTime: {
     type: String,
     default: new Date().getTime()
+  },
+  eotoes: {
+    type: Object,
+    default: null
   }
 })
 
