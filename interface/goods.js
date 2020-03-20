@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const Goods = require('../dbs/models/goods')
 const Order = require('../dbs/models/order')
+const User = require('../dbs/models/user')
 
 const router = new Router({prefix: '/goods'})
 
@@ -49,7 +50,7 @@ router.get('/getGoodsListBykeyword', async (ctx) => {
       {desc: {$regex: reg}},
       {typeName: {$regex: reg}}
     ]
-  }, { __v: 0}).populate('seller', {password: 0, createTime: 0, __v: 0, spareMoney: 0})
+  }, { __v: 0}).populate('seller', {password: 0, createTime: 0, __v: 0, spareMoney: 0}).sort({'_id': -1})
   ctx.body = {
     code: 200,
     msg: '获取成功',
@@ -60,16 +61,23 @@ router.get('/getGoodsListBykeyword', async (ctx) => {
 // 获取搜索字段
 router.get('/getSearchList', async (ctx) => {
   const { city, keyword } = ctx.query
+  if (keyword === '') {
+    ctx.body = {
+      code: 200,
+      msg: '获取成功',
+      data: []
+    }
+    return
+  }
   const reg = new RegExp(keyword, 'i')
   let data = []
   const result = await Goods.find({
     city,
     buyer: undefined,
     $or: [
-      {desc: {$regex: reg}},
       {typeName: {$regex: reg}}
     ]
-  }, {desc: 1, typeName: 1, _id: 0})
+  }, {typeName: 1, _id: 0})
   result.length && result.forEach(item => {
     let newdata = JSON.parse(JSON.stringify(item)) // 深拷贝对象
     Object.keys(newdata).forEach(ite => {
@@ -106,6 +114,8 @@ router.get('/viewMygoods', async (ctx) => {
 // 确认卖给某人
 router.post('/sellToSb', async (ctx) => {
   const { buyer, goodsId } = ctx.request.body
+  const goods = await Goods.findOne({_id: goodsId})
+  await User.updateOne({_id: goods.seller}, {$inc: {spareMoney: goods.price * 10}})
   await Goods.updateOne({_id: goodsId}, {$set: {buyer, finishTime: new Date().getTime()}})
   await Order.updateOne({goods: goodsId, buyer}, {$set: {isReceive: 1}})
   await Order.updateMany({goods: goodsId, buyer: {$ne:buyer}}, {$set: {isReceive: -1}})

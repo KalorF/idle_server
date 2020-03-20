@@ -48,4 +48,20 @@ router.get('/viewDymCom', async (ctx) => {
   }
 })
 
+// 获取我的动态
+router.get('/viewMyDym', async (ctx) => {
+  const { userId } = ctx.query
+  const dyms = await Dynamic.find({publisher: userId})
+  let newarr = JSON.parse(JSON.stringify(dyms))
+  for (let index = 0; index < newarr.length; index++) {
+    const commentNub = await Comment.find({ dynamic: newarr[index]._id })
+    newarr[index].commentNub = commentNub.length
+  }
+  ctx.body = {
+    code: 200,
+    msg: '获取成功',
+    data: newarr
+  }
+})
+
 module.exports = router
