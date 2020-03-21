@@ -64,4 +64,14 @@ router.get('/viewMyDym', async (ctx) => {
   }
 })
 
+// 点赞动态
+router.post('/givelikeTodym', async (ctx) => {
+  const { id, status } = ctx.request.body
+  await Dynamic.updateOne({ _id: id }, {$inc: {likeNum: status == 1 ? 1 : -1}})
+  ctx.body = {
+    code: 200,
+    msg: '成功'
+  }
+})
+
 module.exports = router

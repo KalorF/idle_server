@@ -2,6 +2,7 @@ const Router = require('koa-router')
 const Goods = require('../dbs/models/goods')
 const Order = require('../dbs/models/order')
 const User = require('../dbs/models/user')
+const Type = require('../dbs/models/type')
 
 const router = new Router({prefix: '/goods'})
 
@@ -122,6 +123,24 @@ router.post('/sellToSb', async (ctx) => {
   ctx.body = {
     code: 200,
     msg: '成功'
+  }
+})
+
+// 根据大类来获取商品
+router.get('/getoodsByOneType', async (ctx) => {
+  const { name, city } = ctx.query
+  const oneType = await Type.findOne({ name })
+  const twoTypes = JSON.parse(JSON.stringify(await Type.find({ parentId: oneType._id })))
+  let newData = []
+  for (let index = 0; index < twoTypes.length; index++) {
+    const goods = await Goods.find({typeName: twoTypes[index].name, city, buyer: undefined}).populate('seller')
+    newData = [...newData, ...goods]
+  }
+  newData.sort((a,b) => { return Number(b.createTime) - Number(a.createTime) })
+  ctx.body = {
+    code: 200,
+    msg: '获取成功',
+    data: newData
   }
 })
 

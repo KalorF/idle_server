@@ -75,7 +75,7 @@ router.post('/getUserInfo', async (ctx) => {
 // 修改用户信息接口
 router.post('/modifyUserInfo', async (ctx) => {
   const { userId, username, wechat, avatars } = ctx.request.body
-  if (wechat) {
+  if (username) {
     await User.updateOne({ _id: userId }, {$set:{ username }})
   } else if (wechat) {
     await User.updateOne({ _id: userId }, {$set:{ wechat }})
