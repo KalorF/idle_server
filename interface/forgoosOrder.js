@@ -15,6 +15,7 @@ router.post('/addForgoosOrder', async (ctx) => {
   }
 })
 
+// 获取兑换商品订单
 router.get('/forgoodsList', async (ctx) => {
   const data = await ForgoodsOrder.find({})
   ctx.body = {

@@ -3,6 +3,7 @@ const Forgoods = require('../dbs/models/forgoods')
 
 const router = new Router({prefix: '/forgoods'})
 
+// 添加兑换商品
 router.post('/addgoods', async (ctx) => {
   const { title, pics, cost } = ctx.request.body
   await Forgoods.create({ title, pics, cost })
@@ -12,6 +13,7 @@ router.post('/addgoods', async (ctx) => {
   }
 })
 
+// 获取兑换商品列表
 router.get('/getForgoods', async (ctx) => {
   const data = await Forgoods.find({})
   ctx.body = {

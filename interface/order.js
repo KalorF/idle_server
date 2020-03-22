@@ -2,6 +2,7 @@ const Router = require('koa-router')
 const Order = require('../dbs/models/order')
 const Goods = require('../dbs/models/goods')
 const User = require('../dbs/models/user')
+const Message = require('../dbs/models/message')
 
 const router = new Router({prefix: '/order'})
 
@@ -17,6 +18,10 @@ router.post('/createOrder', async (ctx) => {
     return
   }
   if (status) {
+    const goods = await Goods.findOne({ _id: goodsId })
+    const buyer = await User.findOne({ _id: buyerId }, {password: 0, createTime: 0, __v: 0, spareMoney: 0})
+    const content = { goods, buyer}
+    await Message.create({ content, acceptor: goods.seller, msgType: 0 })
     const corder = await Order.create({goods: goodsId, buyer: buyerId})
     if (corder) {
       ctx.body = {

@@ -126,7 +126,7 @@ router.post('/sellToSb', async (ctx) => {
   }
 })
 
-// 根据大类来获取商品
+// 根据父类来获取商品
 router.get('/getoodsByOneType', async (ctx) => {
   const { name, city } = ctx.query
   const oneType = await Type.findOne({ name })

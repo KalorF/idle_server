@@ -13,6 +13,7 @@ const comment = require('./interface/comment')
 const reply = require('./interface/reply')
 const forgoods = require('./interface/forgoods')
 const forgoosOrder = require('./interface/forgoosOrder')
+const message = require('./interface/message')
 
 const app = new Koa()
 
@@ -38,6 +39,7 @@ app.use(comment.routes()).use(comment.allowedMethods())
 app.use(reply.routes()).use(reply.allowedMethods())
 app.use(forgoods.routes()).use(forgoods.allowedMethods())
 app.use(forgoosOrder.routes()).use(forgoosOrder.allowedMethods())
+app.use(message.routes()).use(message.allowedMethods())
 
 app.listen(3000, () => {
   console.log('server listening in http://localhost:3000')

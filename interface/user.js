@@ -1,7 +1,7 @@
 const Router = require('koa-router')
 const User = require('../dbs/models/user')
 const fs = require('fs')
-let OSS = require('ali-oss')
+const OSS = require('ali-oss')
 
 let client = new OSS({
   region: 'oss-cn-shenzhen',
@@ -11,6 +11,7 @@ let client = new OSS({
 });
 const router = new Router({prefix: '/user'})
 
+// 注册接口
 router.post('/signup', async (ctx) => {
   const { username, password, phone, wechat } = ctx.request.body
   try {
@@ -41,6 +42,7 @@ router.post('/signup', async (ctx) => {
   }
 })
 
+// 登陆接口
 router.post('/login', async (ctx) => {
   const { phone, password } = ctx.request.body
   const findUser = await User.findOne({phone}, {__v: 0, createTime: 0})
@@ -88,6 +90,7 @@ router.post('/modifyUserInfo', async (ctx) => {
   }
 })
 
+// 修改密码接口
 router.post('/modifyPwd', async (ctx) => {
   const { userId, originPwd, newPwd } = ctx.request.body
   const user = await User.findOne({ _id: userId, password: originPwd})
