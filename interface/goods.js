@@ -18,6 +18,16 @@ router.post('/publishGoods', async (ctx) => {
   }
 })
 
+// 删除商品
+router.post('/delGoods', async (ctx) => {
+  const { id } = ctx.request.body
+  await Goods.deleteOne({ _id: id })
+  ctx.body = {
+    code: 200,
+    msg: '删除成功'
+  }
+})
+
 // 根据id获取商品详情
 router.get('/goodsDetail', async (ctx) => {
   const { id } = ctx.query
@@ -109,6 +119,19 @@ router.get('/viewMygoods', async (ctx) => {
     code: 200,
     msg: '获取成功',
     data: myGoods
+  }
+})
+
+// 根据商品id查看商品购买情况
+router.get('/viewGoodsById', async (ctx) => {
+  const { id } = ctx.query
+  let good = JSON.parse(JSON.stringify(await Goods.findOne({ _id: id, buyer: undefined })))
+  const buyers = await Order.find({ goods: good._id }).populate('buyer',{password: 0, createTime: 0, __v: 0, spareMoney: 0})
+  good.buyers = buyers
+  ctx.body = {
+    code: 200,
+    msg: '获取成功',
+    data: good
   }
 })
 

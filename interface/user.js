@@ -1,5 +1,8 @@
 const Router = require('koa-router')
 const User = require('../dbs/models/user')
+const Dynamic = require('../dbs/models/dynamic')
+const Comment = require('../dbs/models/comment')
+const Goods = require('../dbs/models/goods')
 const fs = require('fs')
 const OSS = require('ali-oss')
 
@@ -119,5 +122,24 @@ router.post('/uploadPics', async (ctx) => {
     data: result
   }
 })
+
+// 根据用户id获取商品和动态
+router.post('/getGoodsAndDy', async (ctx) => {
+  const { id } = ctx.request.body
+  const user = await User.findOne({ _id: id }, {password: 0, createTime: 0, __v: 0, spareMoney: 0})
+  const goods = await Goods.find({ seller: id, buyer: undefined }).sort({ '_id': -1 })
+  let dyms = JSON.parse(JSON.stringify(await Dynamic.find({publisher: id})))
+  for (let index = 0; index < dyms.length; index++) {
+    const commentNub = await Comment.find({ dynamic: dyms[index]._id })
+    dyms[index].commentNub = commentNub.length
+  }
+  let data = { user, goods, dyms }
+  ctx.body = {
+    code: 200,
+    msg: '获取成功',
+    data
+  }
+})
+
 
 module.exports = router
