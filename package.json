@@ -28,6 +28,7 @@
     "koa-bodyparser": "^4.2.1",
     "koa-json": "^2.0.2",
     "koa-router": "^8.0.6",
+    "koa2-cors": "^2.0.6",
     "mongoose": "^5.8.9"
   }
 }

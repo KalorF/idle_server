@@ -14,6 +14,10 @@ const ForgoodsSchema = new Schema({
     type: Number,
     default: 0
   },
+  status: {
+    type: Number,
+    default: 0
+  },
   createTime: {
     type: String,
     default: new Date().getTime()

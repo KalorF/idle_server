@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 // const bodyParser = require('koa-bodyparser')
 const koaBody = require('koa-body');
 const json = require('koa-json')
+const cors = require('koa2-cors')
 const dbConfig = require('./dbs/config')
 const user = require('./interface/user')
 const type = require('./interface/type')
@@ -27,6 +28,7 @@ app.use(koaBody({
   }
 }))
 app.use(json())
+app.use(cors())
 
 mongoose.connect(dbConfig.dbs, {useNewUrlParser:true, useUnifiedTopology: true})
 

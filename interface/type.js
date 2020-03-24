@@ -60,6 +60,16 @@ router.post('/addTwo', async (ctx) => {
   }
 })
 
+// 删除类型
+router.post('/deltype', async (ctx) => {
+  const { id } = ctx.request.body
+  await Type.deleteOne({_id: id})
+  ctx.body = {
+    code: 200,
+    msg: '删除成功'
+  }
+})
+
 // 查询所有
 router.get('/typeList', async (ctx) => {
   // 对数据进行拷贝，否则无法进行修改

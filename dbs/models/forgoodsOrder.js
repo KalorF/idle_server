@@ -6,6 +6,10 @@ const ForgoodsOrderSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Forgoods'
   },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   createTime: {
     type: String,
     default: new Date().getTime()
