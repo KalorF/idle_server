@@ -5,7 +5,7 @@ const Comment = require('../dbs/models/comment')
 const Goods = require('../dbs/models/goods')
 const fs = require('fs')
 const OSS = require('ali-oss')
-const aliConfig = require('../aliConifg')
+const aliConfig = require('../aliConfig')
 
 let client = new OSS({
   region: aliConfig.region,
