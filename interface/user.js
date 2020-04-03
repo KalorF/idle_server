@@ -5,12 +5,13 @@ const Comment = require('../dbs/models/comment')
 const Goods = require('../dbs/models/goods')
 const fs = require('fs')
 const OSS = require('ali-oss')
+const aliConfig = require('../aliConifg')
 
 let client = new OSS({
-  region: 'oss-cn-shenzhen',
-  accessKeyId: 'LTAI4FsFdocr9jTT3oVBBzZW',
-  accessKeySecret: 'NSQpM5SVNpNxGazxBW4fu2U0uMH3z5',
-  bucket: 'idlepics',
+  region: aliConfig.region,
+  accessKeyId: aliConfig.accessKeyId,
+  accessKeySecret: aliConfig.accessKeySecret,
+  bucket: aliConfig.bucket,
 });
 const router = new Router({prefix: '/user'})
 
