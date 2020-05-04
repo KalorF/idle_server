@@ -52,12 +52,21 @@ router.post('/myOrder', async (ctx) => {
 // 确认收货接口
 router.post('/confirmGoods', async (ctx) => {
   const { OrderId, userId } = ctx.request.body
-  const order = Order.findOne({_id: OrderId}).populate('goods')
+  const order = await Order.findOne({_id: OrderId}).populate('goods')
   await User.updateOne({_id: userId}, {$inc: {spareMoney: order.goods.price * 10}})
   await Order.updateOne({ _id: OrderId }, {$set: {isReceive: 2, finishTime: new Date().getTime()}})
   ctx.body = {
     code: 200,
     msg: '确认收货成功'
+  }
+})
+
+router.post('/del', async (ctx) => {
+  const { id } = ctx.request.body
+  await Order.deleteOne({_id: id})
+  ctx.body = {
+    code: 200,
+    msg: '删除成功'
   }
 })
 

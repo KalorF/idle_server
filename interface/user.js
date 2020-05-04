@@ -34,7 +34,7 @@ router.post('/signup', async (ctx) => {
       data: error
     }
   }
-  
+
   const cuser = await User.create({username, password, phone, wechat})
   if (cuser) {
     ctx.body = {
@@ -142,5 +142,14 @@ router.post('/getGoodsAndDy', async (ctx) => {
   }
 })
 
+// 获取所有用户
+router.get('/alluser', async (ctx) => {
+  const data = await User.find({})
+  ctx.body  = {
+    code: 200,
+    msg: '获取成功',
+    data
+  }
+})
 
 module.exports = router

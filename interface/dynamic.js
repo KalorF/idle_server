@@ -74,4 +74,13 @@ router.post('/givelikeTodym', async (ctx) => {
   }
 })
 
+router.post('/del', async (ctx) => {
+  const { id } = ctx.request.body
+  await Dynamic.deleteOne({ _id: id })
+  ctx.body = {
+    code: 200,
+    msg: '删除成功'
+  }
+})
+
 module.exports = router
